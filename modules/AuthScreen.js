@@ -82,13 +82,11 @@ const AuthScreen = ({ navigation }) => {
     const openSignInModal = () => {
         setEmail('');
         setPassword('');
-        setSignUpModalVisible(false);
         setSignInModalVisible(true);
     };
 
     const closeModal = () => {
         setSignInModalVisible(false);
-        setSignUpModalVisible(false);
     };
 
     const handleSignIn = async () => {
