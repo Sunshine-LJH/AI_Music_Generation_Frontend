@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import axios from '../axiosConfig';
+import axios from 'axios';
 
 const AuthScreen = ({ navigation }) => {
     const [showStaticCursor, setShowStaticCursor] = useState(true);
@@ -33,19 +33,6 @@ const AuthScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    // 在组件加载时获取 CSRF token
-    useEffect(() => {
-        const fetchCsrfToken = async () => {
-            try {
-                await axios.get('/api/csrf/');
-            } catch (error) {
-                console.error('Failed to fetch CSRF token:', error);
-            }
-        };
-        fetchCsrfToken();
-    }, []);
-
-    // 流式文本打字效果
     useEffect(() => {
         if (!isTypingFinished && charIndex < originalMainHeadingText.length) {
             const typingTimeout = setTimeout(() => {
@@ -92,11 +79,10 @@ const AuthScreen = ({ navigation }) => {
     const handleSignIn = async () => {
         if (email.trim() === '' || password.trim() === '') return;
         try {
-            const response = await axios.post('/api/signin/', {
+            const response = await axios.post('http://localhost:8000/api/signin/', {
                 email: email,
                 password: password,
             });
-            // console.log('Backend response:', response.data);
             if (response.data.status === 'ok') {
                 closeModal();
                 navigation.navigate('Create Your Music');
@@ -178,7 +164,6 @@ const AuthScreen = ({ navigation }) => {
             </View>
         );
     }
-
 
     return (
         <KeyboardAvoidingView
@@ -348,13 +333,13 @@ const styles = StyleSheet.create({
     inputIcon: {
         marginHorizontal: 8,
     },
-    promptInput: { // 从styles.input 到 styles.promptInput 的改变
+    promptInput: {
         flex: 1,
         color: '#FFFFFF',
         fontSize: 16,
         paddingVertical: Platform.OS === 'web' ? 10 : 5,
         fontFamily: Platform.OS === 'web' ? 'Helvetica, Arial, sans-serif' : 'sans-serif',
-        ...(Platform.OS === 'web' && { outlineStyle: 'none' }), // Remove web outline
+        ...(Platform.OS === 'web' && { outlineStyle: 'none' }),
     },
     createButton: {
         flexDirection: 'row',
@@ -433,7 +418,7 @@ const modalStyles = StyleSheet.create({
         lineHeight: 20,
         maxWidth: '90%',
     },
-    input: { // modal inputs 样式
+    input: {
         width: '100%',
         backgroundColor: '#2C2C2E',
         color: '#FFFFFF',
@@ -458,15 +443,15 @@ const modalStyles = StyleSheet.create({
         minHeight: 48,
     },
     continueButtonDisabled: {
-        backgroundColor: '#E0E0E0', // Light grey background for disabled button
+        backgroundColor: '#E0E0E0', 
     },
     continueButtonText: {
-        color: '#000000', // Black text for enabled button
+        color: '#000000', 
         fontSize: 16,
         fontWeight: '600',
     },
     continueButtonTextDisabled: {
-        color: '#666666', // Darker grey text for disabled button
+        color: '#666666', 
     },
     legalText: {
         fontSize: 11,
